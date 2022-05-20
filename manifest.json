@@ -22,7 +22,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["http://localhost:*/*", "https://localhost:*/*"],
+            "matches": ["http://*/*"],
             "js": ["/scripts/socket.io.js", "/scripts/reloader.js"],
             "run_at": "document_end"
         }
