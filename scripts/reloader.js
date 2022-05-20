@@ -5,7 +5,11 @@ function selfFunction(hostIp) {
 
     const hostUrl = `http://${hostIp}:64356`;
 
-    const socket = io(hostUrl);
+    let socket;
+
+    socket && socket.disconnect();
+
+    socket = io(hostUrl);
 
     socket.on("connect", () => {
         socket.on("reloadUrls", ({ urls }) => {
@@ -69,16 +73,13 @@ function detectBrowser() {
     }
 }
 
-function Browser() {
-    if (navigator.userAgent.indexOf("Chrome") !== -1) {
-        return chrome;
-    } else if (navigator.userAgent.indexOf("Firefox") !== -1) {
-        return browser;
-    } else {
-        return chrome;
-    }
-}
-
-Browser().storage.local.get("hostIp", ({ hostIp }) => {
+chrome.storage.local.get("hostIp", ({ hostIp }) => {
     selfFunction(hostIp);
+});
+
+chrome.runtime.onMessage.addListener((data) => {
+    if (data.hostIp) {
+        selfFunction(data.hostIp);
+    }
+    return true;
 });
